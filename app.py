@@ -3,9 +3,14 @@
 # Licensed under the MIT License. See LICENSE in the project root for license information.
 #-----------------------------------------------------------------------------------------
 
-from flask import Flask
-app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    return app.send_static_file("index.html")
+import pdfplumber
+import csv
+
+with pdfplumber.open("test.pdf") as pdf:
+    page = pdf.pages[0]
+    table = page.extract_table()
+
+    with open("output.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(table)
